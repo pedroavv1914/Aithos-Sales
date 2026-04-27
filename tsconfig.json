@@ -1,63 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
-  },
-  "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx",
-    "middleware.ts",
-    "next-env.d.ts",
-    "src/components/**/*.ts",
-    "src/components/**/*.tsx",
-    "src/features/**/*.ts",
-    "src/features/**/*.tsx",
-    "src/hooks/**/*.ts",
-    "src/hooks/**/*.tsx",
-    "src/types/**/*.ts",
-    "src/types/**/*.tsx",
-    "src/data/**/*.ts",
-    "src/data/**/*.tsx",
-    "src/lib/**/*.ts",
-    "src/lib/**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "functions",
-    "src/App.tsx",
-    "src/main.tsx",
-    "src/components/KanbanBoard.tsx",
-    "src/components/Layout.tsx",
-    "src/components/SaleCard.tsx",
-    "src/types/kanban.ts",
-    "src/vite-env.d.ts"
+  "files": [],
+  "references": [
+    { "path": "./apps/web" },
+    { "path": "./packages/db" }
   ]
 }
