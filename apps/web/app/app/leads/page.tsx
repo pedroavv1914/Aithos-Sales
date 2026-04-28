@@ -17,5 +17,5 @@ export default async function LeadsPage() {
   }
 
   const payload = await getLeadsPayload(context.workspace.id);
-  return <LeadsScreen payload={payload} />;
+  return <LeadsScreen workspaceId={context.workspace.id} payload={payload} />;
 }
