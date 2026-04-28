@@ -4,6 +4,7 @@ export type Priority = "low" | "medium" | "high";
 
 export type LeadEventType =
   | "created"
+  | "updated"
   | "stage_changed"
   | "note_added"
   | "task_created"
