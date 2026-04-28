@@ -44,3 +44,16 @@ export const stageMoveSchema = z.object({
   fromStageId: z.string().min(1),
   toStageId: z.string().min(1)
 });
+
+export const updateLeadSchema = z.object({
+  name: z.string().min(2, "Nome obrigatorio").optional(),
+  phone: z.string().min(8, "Telefone invalido").optional(),
+  email: z.string().email("E-mail invalido").optional().or(z.literal("")),
+  company: z.string().optional(),
+  need: z.string().optional(),
+  budget: z.number().positive("Budget deve ser positivo").optional().nullable(),
+  deadline: z.string().optional(),
+  notes: z.string().optional(),
+  source: z.string().optional(),
+  priority: z.enum(["low", "medium", "high"]).optional()
+});
