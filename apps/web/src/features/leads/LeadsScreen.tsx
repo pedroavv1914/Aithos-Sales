@@ -1,19 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { MessageCircle, MoveRight, NotebookPen, PlusCircle } from "lucide-react";
+import { MessageCircle, MoveRight, NotebookPen } from "lucide-react";
 import * as React from "react";
-import { EmptyState, LeadCard, LeadFilters } from "@/components/crm";
+import { EmptyState, LeadCard, LeadFilters, NewLeadDialog } from "@/components/crm";
 import { Badge, Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
 import { useLeadFilters } from "@/hooks/use-lead-filters";
 import { useMobile } from "@/hooks/use-mobile";
 import type { LeadsPayload } from "@/types";
 
 type LeadsScreenProps = {
+  workspaceId: string;
   payload: LeadsPayload;
 };
 
-export const LeadsScreen = ({ payload }: LeadsScreenProps) => {
+export const LeadsScreen = ({ workspaceId, payload }: LeadsScreenProps) => {
   const { filters, setFilters, filteredLeads } = useLeadFilters(payload.leads);
   const isMobile = useMobile();
 
@@ -26,10 +27,7 @@ export const LeadsScreen = ({ payload }: LeadsScreenProps) => {
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline">{filteredLeads.length} resultados</Badge>
-          <Button>
-            <PlusCircle className="h-4 w-4" />
-            Novo lead
-          </Button>
+          <NewLeadDialog workspaceId={workspaceId} stages={payload.stages} />
         </div>
       </div>
 
