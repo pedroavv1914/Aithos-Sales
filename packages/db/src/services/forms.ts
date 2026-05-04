@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getSupabaseAdminClient, isSupabaseAdminConfigured } from "../admin";
+import { DEFAULT_FORM_FIELDS } from "../constants";
 import type { CaptureForm } from "../types";
 import { getWorkspaceBySlug } from "./workspaces";
 
@@ -39,6 +40,35 @@ const serializeForm = (row: FormRow): CaptureForm => ({
   createdAt: toIso(row.created_at),
   updatedAt: toIso(row.updated_at)
 });
+
+export const createCaptureForm = async (workspaceId: string, title: string) => {
+  if (!isSupabaseAdminConfigured()) {
+    throw new Error("Supabase nao configurado.");
+  }
+
+  const admin = getSupabaseAdminClient();
+  const now = new Date().toISOString();
+  const { data, error } = await admin
+    .from("forms")
+    .insert({
+      workspace_id: workspaceId,
+      title,
+      description: null,
+      fields: DEFAULT_FORM_FIELDS,
+      consent_text: "Autorizo o contato da equipe e o tratamento dos meus dados para fins comerciais.",
+      success_message: "Recebemos seu contato! Nosso time respondera em breve.",
+      created_at: now,
+      updated_at: now
+    })
+    .select("*")
+    .single<FormRow>();
+
+  if (error || !data) {
+    throw new Error("Falha ao criar formulario.");
+  }
+
+  return serializeForm(data);
+};
 
 export const getWorkspaceForms = async (workspaceId: string) => {
   if (!isSupabaseAdminConfigured()) {
