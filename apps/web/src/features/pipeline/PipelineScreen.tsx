@@ -19,7 +19,7 @@ import {
 } from "@dnd-kit/sortable";
 import { Filter, Search } from "lucide-react";
 import * as React from "react";
-import { KanbanColumn, LeadCard, LeadDrawer } from "@/components/crm";
+import { KanbanColumn, LeadCard, LeadDrawer, NewLeadDialog } from "@/components/crm";
 import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from "@/components/ui";
 import type { Lead, PipelineColumn, PipelinePayload } from "@/types";
 
@@ -164,10 +164,13 @@ export const PipelineScreen = ({ workspaceId, payload }: PipelineScreenProps) =>
             <h2 className="text-xl font-semibold text-slate-900">Funil Kanban</h2>
             <p className="text-sm text-slate-500">Drag and drop com alertas de urgencia e leitura rapida.</p>
           </div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-            <Filter className="h-3.5 w-3.5" />
-            {visibleColumns.reduce((sum, column) => sum + column.count, 0)} leads visiveis
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+              <Filter className="h-3.5 w-3.5" />
+              {visibleColumns.reduce((sum, column) => sum + column.count, 0)} leads visiveis
+            </span>
+            <NewLeadDialog workspaceId={workspaceId} stages={payload.stages} />
+          </div>
         </div>
 
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
