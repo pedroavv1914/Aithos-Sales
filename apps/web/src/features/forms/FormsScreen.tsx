@@ -21,8 +21,32 @@ export const FormsScreen = ({ workspaceId, payload }: FormsScreenProps) => {
   const [forms, setForms] = React.useState(payload.forms.map(cloneForm));
   const [activeId, setActiveId] = React.useState(payload.forms[0]?.id ?? "");
   const [saving, setSaving] = React.useState(false);
+  const [creating, setCreating] = React.useState(false);
 
   const activeForm = forms.find((form) => form.id === activeId) ?? forms[0];
+
+  const createForm = async () => {
+    setCreating(true);
+    try {
+      const response = await fetch(`/api/forms?workspaceId=${workspaceId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: `Formulario ${forms.length + 1}` })
+      });
+
+      if (!response.ok) {
+        toast({ title: "Falha ao criar", description: "Nao foi possivel criar o formulario.", variant: "destructive" });
+        return;
+      }
+
+      const data = await response.json();
+      setForms((current) => [...current, cloneForm(data.form)]);
+      setActiveId(data.form.id);
+      toast({ title: "Formulario criado", description: data.form.title, variant: "success" });
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const saveForm = async () => {
     if (!activeForm) return;
@@ -75,9 +99,9 @@ export const FormsScreen = ({ workspaceId, payload }: FormsScreenProps) => {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline">{forms.length} formularios</Badge>
-          <Button variant="secondary">
+          <Button variant="secondary" onClick={createForm} disabled={creating}>
             <PlusCircle className="h-4 w-4" />
-            Novo formulario
+            {creating ? "Criando..." : "Novo formulario"}
           </Button>
           <Button onClick={saveForm} disabled={saving || !activeForm}>
             <Save className="h-4 w-4" />
