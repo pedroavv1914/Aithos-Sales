@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Plus, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Switch, Textarea, useToast } from "@/components/ui";
 import type { SettingsPayload } from "@/types";
 
@@ -12,7 +13,9 @@ type SettingsScreenProps = {
 
 export const SettingsScreen = ({ workspaceId, payload }: SettingsScreenProps) => {
   const { toast } = useToast();
+  const router = useRouter();
   const [followUpDays, setFollowUpDays] = React.useState(payload.followUpDays);
+  const [savingPrefs, setSavingPrefs] = React.useState(false);
   const [brandingName, setBrandingName] = React.useState(payload.branding.appName);
   const [accentColor, setAccentColor] = React.useState(payload.branding.accentColor);
   const [tagDraft, setTagDraft] = React.useState("");
@@ -25,8 +28,25 @@ export const SettingsScreen = ({ workspaceId, payload }: SettingsScreenProps) =>
     setTagDraft("");
   };
 
-  const savePreferences = () => {
-    toast({ title: "Preferencias salvas", description: "Configuracoes aplicadas.", variant: "success" });
+  const savePreferences = async () => {
+    setSavingPrefs(true);
+    try {
+      const response = await fetch(`/api/settings/preferences?workspaceId=${workspaceId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ alertInactiveDays: followUpDays })
+      });
+
+      if (!response.ok) {
+        toast({ title: "Erro", description: "Falha ao salvar configuracoes.", variant: "destructive" });
+        return;
+      }
+
+      toast({ title: "Preferencias salvas", description: "Configuracoes aplicadas.", variant: "success" });
+      router.refresh();
+    } finally {
+      setSavingPrefs(false);
+    }
   };
 
   return (
@@ -128,9 +148,9 @@ export const SettingsScreen = ({ workspaceId, payload }: SettingsScreenProps) =>
               <Label>Cor de destaque</Label>
               <Input value={accentColor} onChange={(event) => setAccentColor(event.target.value)} />
             </div>
-            <Button onClick={savePreferences}>
+            <Button onClick={savePreferences} disabled={savingPrefs}>
               <Save className="h-4 w-4" />
-              Salvar configuracoes
+              {savingPrefs ? "Salvando..." : "Salvar configuracoes"}
             </Button>
           </CardContent>
         </Card>
