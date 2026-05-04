@@ -573,6 +573,31 @@ export const acceptInvite = async (params: {
   return getWorkspaceById(invite.workspaceId);
 };
 
+export const updateWorkspacePreferences = async (
+  workspaceId: string,
+  data: { alertInactiveDays?: number; timezone?: string }
+) => {
+  ensureAdmin();
+
+  const updates: Record<string, unknown> = {
+    updated_at: new Date().toISOString()
+  };
+
+  if (typeof data.alertInactiveDays !== "undefined") {
+    updates.alert_inactive_days = data.alertInactiveDays;
+  }
+  if (typeof data.timezone !== "undefined") {
+    updates.timezone = data.timezone;
+  }
+
+  const admin = getSupabaseAdminClient();
+  const { error } = await admin.from("workspaces").update(updates).eq("id", workspaceId);
+
+  if (error) {
+    throw new Error("Falha ao salvar preferencias.");
+  }
+};
+
 export const getWorkspaceMembers = async (workspaceId: string) => {
   if (!isSupabaseAdminConfigured()) {
     return [] as WorkspaceMember[];
