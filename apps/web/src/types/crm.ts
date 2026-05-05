@@ -197,6 +197,7 @@ export type LeadDetailsPayload = {
   tasks: Task[];
   events: LeadEvent[];
   stages: LeadStage[];
+  members: Array<{ userId: string; displayName: string }>;
 };
 export type TasksPayload = {
   tasks: Task[];
