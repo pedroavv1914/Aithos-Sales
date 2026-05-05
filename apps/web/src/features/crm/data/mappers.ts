@@ -28,7 +28,7 @@ const normalizeStatus = (lead: LegacyLead): Lead["status"] => {
   return "open";
 };
 
-export const mapLegacyLead = (lead: LegacyLead): Lead => ({
+export const mapLegacyLead = (lead: LegacyLead, nextTaskAt?: string): Lead => ({
   id: lead.id,
   name: lead.name,
   company: lead.company,
@@ -46,7 +46,7 @@ export const mapLegacyLead = (lead: LegacyLead): Lead => ({
   status: normalizeStatus(lead),
   closedReason: lead.closedReason,
   lastInteractionAt: lead.lastContactAt,
-  nextTaskAt: undefined,
+  nextTaskAt,
   hasPendingTask: lead.hasPendingTask,
   assignedTo: lead.assignedTo,
   utm: lead.utm,
