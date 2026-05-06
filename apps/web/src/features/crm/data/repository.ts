@@ -103,10 +103,11 @@ const buildNextTaskMap = async (workspaceId: string): Promise<Map<string, string
 };
 
 const buildLeadsPayload = async (workspaceId: string): Promise<LeadsPayload> => {
-  const [legacyLeads, legacyStages, nextTaskMap] = await Promise.all([
+  const [legacyLeads, legacyStages, nextTaskMap, rawMembers] = await Promise.all([
     cachedListLeads(workspaceId),
     cachedListStages(workspaceId),
-    buildNextTaskMap(workspaceId)
+    buildNextTaskMap(workspaceId),
+    getWorkspaceMembers(workspaceId)
   ]);
   const leads = legacyLeads.map((l) => mapLegacyLead(l, nextTaskMap.get(l.id)));
   const stages = legacyStages.map(mapLegacyStage);
@@ -115,8 +116,11 @@ const buildLeadsPayload = async (workspaceId: string): Promise<LeadsPayload> => 
     id: label.toLowerCase().replace(/\s+/g, "-"),
     label
   }));
+  const members = rawMembers
+    .filter((m) => m.status === "active")
+    .map((m) => ({ userId: m.userId, displayName: m.displayName }));
 
-  return { leads, stages, sources, tags };
+  return { leads, stages, sources, tags, members };
 };
 
 export const getLeadsPayload = async (workspaceId: string) => buildLeadsPayload(workspaceId);
