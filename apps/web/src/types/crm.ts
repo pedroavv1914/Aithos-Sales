@@ -190,6 +190,7 @@ export type LeadsPayload = {
   stages: LeadStage[];
   sources: string[];
   tags: Tag[];
+  members: Array<{ userId: string; displayName: string }>;
 };
 export type PipelinePayload = { stages: LeadStage[]; columns: PipelineColumn[] };
 export type LeadDetailsPayload = {
